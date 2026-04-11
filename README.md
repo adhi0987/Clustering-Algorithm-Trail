@@ -35,12 +35,25 @@ The pipeline strictly processes the `50Hz` accelerometer, gyroscope, and orienta
     - **Multi-layer Perceptron (Neural Network)** (Hidden: 64, max_iter=200)
   - Exports holistic `Accuracy` maps arrayed alongside `Macro Averaged False Positive Rates` out dynamically to standard CSV data logs (`model_accuracies.csv`, `model_fprs.csv`) and a synchronized terminal footprint inside `output.log`.
 
+### 4. `algorithm.py` (Iterative Model Clustering)
+- **Goal:** Dynamically classify and group participants autonomously based upon the structural decision-making similarities within their individualized machine learning models.
+- **Workflow:**
+  - Loads independently trained Random Forest configurations (`RF_model_{username}.pkl`) sequentially from the local `model/` directory.
+  - Extracts the underlying **Gini Feature Importance** multi-dimensional arrays from every model, serving as a unique "behavioral fingerprint" identifying which sensor streams matter most for each specific participant.
+  - Measures incoming profiles against defined cluster representative matrices utilizing **Cosine Similarity**.
+  - Evaluates similarity against a strict, tunable `THRESHOLD` (e.g., 0.9 - 1.0). If an incoming model strongly matches a current cluster, it joins that group and updates the cluster's representative array by averaging the feature importances of all resident models—allowing clusters to continually evolve.
+  - Should an incoming model's behavioral fingerprint fail the threshold check across all established sets, it pioneers a new independent cluster group.
+- **Results & Outputs:**
+  - Iteratively exports chronological snapshots mapping the evolving cluster configurations (e.g., `cluster_results_after_{username}.csv`) systematically inside the `clustering_results_{THRESHOLD}/` directory.
+  - Generates a final definitive cluster map (`cluster_results.csv`), actively grouping subjects who share intrinsic movement mechanics instead of relying on baseline physical metadata attributes.
+
 ## Usage
 Execute scripts in terminal precisely sequential:
 ```bash
 python Weda-fall.py
 python add-labels.py
 python best-model.py
+python algorithm.py
 ```
 
 ## Conclusions Output
